@@ -11,7 +11,7 @@ function somaArray(elementos) {
 }
 
 function nomeCompleto(primeiroNome, segundoNome) {
-    return primeiroNome + ' ' + segundoNome;
+    return `${primeiroNome}  ${segundoNome}`;
 }
 
 function ObtemElementos() {
