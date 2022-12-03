@@ -61,6 +61,22 @@ function ObterElementoNaoRepetido(array) {
     }
     return letra;
 }
+
+function verificarItemIsolado(letras) {
+    let itemIsolado = null
+    letras.forEach(letra => {
+        let numeroDeRepeticoes = 0
+        letras.forEach(letraComparacao => {
+            if (letra == letraComparacao)
+                numeroDeRepeticoes++
+        })
+        if (numeroDeRepeticoes == 1) {
+            itemIsolado = letra
+        }
+    })
+    return itemIsolado
+}
+
 function resolver() {
     var select = document.getElementById('Itens');
     if (select.value == "1") {
@@ -100,7 +116,8 @@ function resolver() {
     }
     else if (select.value == "6") {
         let vetor = ["a", "b", "a", "a", "c", "b"];
-        let elemento = ObterElementoNaoRepetido(vetor);
+ //       let elemento = ObterElementoNaoRepetido(vetor);
+        let elemento = verificarItemIsolado(vetor)
         if ((elemento != null) && (elemento != "")) {
             alert(`
             O único elemento do array que não se repete é ${elemento}
