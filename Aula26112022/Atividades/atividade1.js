@@ -4,9 +4,14 @@ function somarValores(valor1, valor2) {
 
 function somaArray(elementos) {
     var soma = 0;
-    for (let i = 0; i < elementos.length; i++) {
-        soma += elementos[i];
-    }
+    elementos.forEach(elemento => {
+        if (!isNaN(elemento)) {
+            soma += elemento
+        }
+        else {
+            return 
+        }
+    });
     return soma;
 }
 
@@ -85,8 +90,13 @@ function resolver() {
     else if (select.value == "5") {
         var elementos = ObtemElementos();
         var media = somaArray(elementos) / elementos.length;
-        alert(`
-        A média dos valores do array é ${media}`)
+        if (media != null) {
+           alert(`
+             A média dos valores do array é ${media}`)
+        }
+        else {
+            alert('Número inválido no array')
+        }
     }
     else if (select.value == "6") {
         let vetor = ["a", "b", "a", "a", "c", "b"];
