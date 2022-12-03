@@ -84,8 +84,8 @@ function resolver() {
                A média de altura é ${media}`);
     }
     else if (select.value =="7") {
-        var opinioes = [ {idade: 21, opiniao: 2 }, {idade: 25, opiniao: 1},
-            {idade: 30, opiniao: 1 }, {idade: 55, opiniao: 4},
+        var opinioes = [ {idade: 21, opiniao: 2}, {idade: 25, opiniao: 1},
+            {idade: 30, opiniao: 1 }, {idade: 55, opiniao: 2},
             {idade: 35, opiniao: 2 }, {idade: 50, opiniao: 3},
             {idade: 40, opiniao: 3 }, {idade: 45, opiniao: 1},
             {idade: 45, opiniao: 2 }, {idade: 40, opiniao: 3},
