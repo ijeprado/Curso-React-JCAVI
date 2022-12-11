@@ -7,10 +7,20 @@ function App() {
   const [marca, setMarca] = useState('')
   const [ano, setAno] = useState('')
 
-  const [veiculos, setVeiculos] = useState([])
-  const [encontrados, setEncontrados] = useState([])
+  const [veiculos, setVeiculos] = useState([
+    {placa: 'NPC-9191', marca: 'Mercedes Benz', modelo: 'Basculante', ano: 2009},
+    {placa: 'OGQ-9631', marca: 'Volkswage', modelo: 'Fox 1.0', ano: 2012},
+    {placa: 'JZI-3472', marca: 'FIAT', modelo: 'Strada', ano: 2001},
+    {placa: 'OBK-0112', marca: 'FIAT', modelo: 'Uno Mille Economy', ano: 2013},
+    {placa: 'JZE-5683', marca: 'Kia', modelo: 'Besta 12P GS', ano: 2001}
+  ])
 
   function cadastrar() { 
+    if ((placa === "") || (modelo === "") || (marca === "") || (ano === "")) {
+      alert('É necessário preencher todos os campos para efetuar o cadastro')
+      return
+    }
+
     let achou = false 
     veiculos.forEach(veiculo => {
       achou = achou || veiculo.placa === placa
@@ -40,16 +50,20 @@ function App() {
   }
 
   function pesquisar() {
-    setEncontrados([])
+    if ((placa === "") && (modelo === "") && (marca === "") && (ano === "")) {
+      alert('É necessário preencher pelo menos um filtro')
+      return
+    }
+    let numEncontrados = 0
     veiculos.forEach(veiculo => {
       if (((placa === "") || (placa === veiculo.placa)) && 
           ((modelo === "") || (modelo === veiculo.modelo)) &&
           ((marca === "") || (marca === veiculo.marca)) &&
-          ((ano === "") || (ano === veiculo.ano))) {
-        encontrados.push(veiculo)
+          ((ano === "") || (parseInt(ano) === veiculo.ano))) {
+        numEncontrados++
       }
     })
-    alert(`Número de veículos encontrados: ${encontrados.length}`)
+    alert(`Número de veículos encontrados: ${numEncontrados}`)
   }
 
   return (
