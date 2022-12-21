@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 import 'react-datepicker/dist/react-datepicker.css'
 
-import {FaBeer} from 'react-icons/fa'
+import { BiTrash } from 'react-icons/bi'
 import { Button, Form, InputGroup, Table } from 'react-bootstrap'
 import DatePicker from 'react-datepicker';
 import { registerLocale } from  "react-datepicker";
@@ -16,7 +16,7 @@ registerLocale('br', br)
 function App() {
   const [titulo, setTitulo] = useState('')
   const [autor, setAutor] = useState('')
-  const [data, setData] = useState(new Date())
+  const [data, setData] = useState(null)
   
   const [livros, setLivros] = useState([])
 
@@ -33,7 +33,13 @@ function App() {
     if(achou) {
       alert('Livro já foi cadastrado anteriormente')
     } else {
-      const codigo = livros.length + 1
+      let codigo = 0
+      livros.forEach(livro => {
+        if (livro.codigo > codigo) {
+          codigo = livro.codigo
+        }
+      })
+      codigo++
       const livro = {
         codigo,
         titulo,
@@ -51,7 +57,7 @@ function App() {
   function limparForm() {
     setTitulo('')
     setAutor('')
-    setData('')
+    setData(null)
   }
 
   function excluir(codigo) {
@@ -66,28 +72,29 @@ function App() {
 
   return (
     <div className="container">
-        <InputGroup className="mb-2 mt-3">
+        <InputGroup className="mb-2 mt-3 w-50">
           <Form.Control value={titulo} onChange={(e) => {setTitulo(e.target.value)}} placeholder="Titulo"
           aria-label="Default" aria-describedby="inputGroup-sizing-default"
           />            
         </InputGroup>      
-        <InputGroup className="mb-2">
+        <InputGroup className="mb-2 w-50">
           <Form.Control value={autor} onChange={(e) => {setAutor(e.target.value)}} placeholder="Autor"
           aria-label="Default" aria-describedby="inputGroup-sizing-default"
           />            
         </InputGroup>
-      <DatePicker selected={data} onChange={(date) => setData(date)} isClearable placeholderText="Data de Publicação" 
+      <DatePicker selected={data ? data : null} onChange={(date) => setData(date)} placeholderText="Data de Publicação" 
                   locale="br" dateFormat="dd/MM/yyyy" />
       <br />
       <br />
       <table><tbody><tr><td><Button onClick={cadastrar}>Inserir</Button></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Número de livros: {livros.length}</td></tr></tbody></table>      
-      <Table>
+      <br />
+      <Table class="table table-bordered table-hover table-sm">
           <thead>
             <tr>
             <th className="th">Código</th>
-            <th className="th">Título</th>
-            <th className="th">Autor</th>
-            <th className="th">Data de Publicação</th>
+            <th><div className="th">Título</div></th>
+            <th><div className="th">Autor</div></th>
+            <th><div className="th">Data de Publicação</div></th>
             <th className="th">Ação</th>
             </tr>
           </thead>
@@ -95,12 +102,13 @@ function App() {
             {
               livros.map((livro, key) => {
                 return (
-                <tr key={key}><td>{livro.codigo.toString()}</td>
+                <tr key={key}>
+                 <td>{livro.codigo.toString()}</td>
                  <td>{livro.titulo}</td>
                  <td>{livro.autor}</td>
-                 <td>{livro ? livro.data.toLocaleDateString() : ""}</td>
-                 <td>
-                   <Button onClick={() => {excluir(livro.codigo)}}><FaBeer /></Button>
+                 <td><div  className="tdCentralizado">{livro ? livro.data.toLocaleDateString() : ""}</div></td>
+                 <td className="th">
+                   <Button onClick={() => {excluir(livro.codigo)}}><BiTrash /></Button>
                 </td></tr>
               )})
             }
