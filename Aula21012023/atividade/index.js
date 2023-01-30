@@ -34,6 +34,10 @@ function indiceVeiculo(pesquisa, chave) {
     return indice
 }
 
+function getVeiculo(placa) {
+    veiculos.filter(v => v.placa === placa)[0]
+}
+
 server.get('/veiculo/:pesquisa/:chave', (req, res) => {
     const {pesquisa} = req.params
     const {chave} = req.params
