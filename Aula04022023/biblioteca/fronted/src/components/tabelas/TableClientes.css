@@ -1,0 +1,14 @@
+.th {
+    justify-content: center;
+    display: flex;
+}
+  
+.tdCentralizado {
+    justify-content: center;
+    display: flex;
+}
+
+.tdDireita {
+    justify-content: right;
+    display: flex;
+}
