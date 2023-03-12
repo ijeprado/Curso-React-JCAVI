@@ -132,13 +132,13 @@ async function create(req, res) {
   res.json(aluguel)
 }
 
-function getData(strData, inicio) {
+function getDataStr(strData, inicioDoDia) {
   const dia = parseInt(strData.slice(0,2))
   const mes = parseInt(strData.slice(2,4)) - 1
   const ano = parseInt(strData.slice(4,8))
   const data = new Date(ano, mes, dia, 0, 0)
   return `'${data.getFullYear() + '-' + ("0" + (data.getMonth() + 1)).slice(-2) + '-' +
-    ("0" + data.getDate()).slice(-2) + (inicio ? ' 00:00:00' : ' 23:59:59')}'`   
+    ("0" + data.getDate()).slice(-2) + (inicioDoDia ? ' 00:00:00' : ' 23:59:59')}'`   
 }
 
 function getAlugueis(req, res) {
@@ -172,19 +172,19 @@ function getAlugueis(req, res) {
   }
 
   if (dtInicial !== '0') {
-    sql += ` and datetime(round(a.data / 1000), 'unixepoch') >= ${getData(dtInicial, true)}`
+    sql += ` and datetime(round(a.data / 1000), 'unixepoch') >= ${getDataStr(dtInicial, true)}`
   }
 
   if (dtFinal !== '0') {
-    sql += ` and datetime(round(a.data / 1000), 'unixepoch') <= ${getData(dtFinal, false)}`
+    sql += ` and datetime(round(a.data / 1000), 'unixepoch') <= ${getDataStr(dtFinal, false)}`
   }
 
   if (dtInicialDevolucao !== '0') {
-    sql += ` and datetime(round(a.dataDevolucao / 1000), 'unixepoch') >= ${getData(dtInicialDevolucao, true)}`
+    sql += ` and datetime(round(a.dataDevolucao / 1000), 'unixepoch') >= ${getDataStr(dtInicialDevolucao, true)}`
   }
 
   if (dtFinalDevolucao !== '0') {
-    sql += ` and datetime(round(a.dataDevolucao / 1000), 'unixepoch') <= ${getData(dtFinalDevolucao, false)}`
+    sql += ` and datetime(round(a.dataDevolucao / 1000), 'unixepoch') <= ${getDataStr(dtFinalDevolucao, false)}`
   }
 
   const params = []
@@ -200,4 +200,63 @@ function getAlugueis(req, res) {
   })
 }
 
-module.exports = { create, get, put, remove, getAlugueis }
+async function getHistorico(req, res) {
+  const {idCliente} = req.params
+  res.json(
+      await prisma.aluguel.findMany({
+          include: {
+            Livro: {
+              select: {
+                valorDiaria: true,
+                titulo: true,
+              },
+            },
+          },
+          where: {
+            Cliente: {
+              id: parseInt(idCliente)
+            }
+          }
+        })
+      )
+}
+
+function getData(strData, inicioDoDia) {
+  const dia = parseInt(strData.slice(0,2))
+  const mes = parseInt(strData.slice(2,4)) - 1
+  const ano = parseInt(strData.slice(4,8))
+  return new Date(ano, mes, dia, inicioDoDia ? 0 : 23, inicioDoDia ? 0 : 59)
+}
+
+async function getFaturamento(req, res) {
+  let {dataInicial} = req.params
+  let {dataFinal} = req.params
+  dataInicial = getData(dataInicial, true)
+  dataFinal = getData(dataFinal, false)
+
+  res.json(
+      await prisma.aluguel.findMany({
+          include: {
+            Livro: {
+              select: {
+                valorDiaria: true,
+                titulo: true,
+              },
+            },
+            Cliente: {
+              select: {
+                nome: true
+              }
+            }
+          },
+          where: {
+            data: {
+              lte: dataFinal,
+              gte: dataInicial
+            }
+          }
+        })
+      )
+}
+
+module.exports = { create, get, put, remove, getAlugueis, getHistorico, getFaturamento }
